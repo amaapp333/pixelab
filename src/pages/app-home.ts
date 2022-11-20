@@ -72,15 +72,15 @@ export class AppHome extends LitElement {
   async firstUpdated() {
     // this method is a lifecycle even in lit
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    console.log('This is your home page');
+    console.log('This is your home page from our builder');
   }
 
   share() {
     if ((navigator as any).share) {
       (navigator as any).share({
-        title: 'PWABuilder pwa-starter',
-        text: 'Check out the PWABuilder pwa-starter!',
-        url: 'https://github.com/pwa-builder/pwa-starter',
+        title: 'PWABuilder Starter',
+        text: 'Check out the Builder Pwa-Starter!',
+        url: 'https://github.com/amaapp333/pixelab',
       });
     }
   }
@@ -98,13 +98,13 @@ export class AppHome extends LitElement {
 
             <p>
               For more information on the PWABuilder pwa-starter, check out the
-              <a href="https://github.com/pwa-builder/pwa-starter/wiki/Getting-Started">
+              <a href="  ">
                 Documentation on Github</a>.
             </p>
 
             <p id="mainInfo">
               Welcome to the
-              <a href="https://pwabuilder.com">PWABuilder</a>
+              <a href="https://">PWABuilder</a>
               pwa-starter! Be sure to head back to
               <a href="https://pwabuilder.com">PWABuilder</a>
               when you are ready to ship this PWA to the Microsoft Store, Google Play
@@ -117,7 +117,7 @@ export class AppHome extends LitElement {
           </sl-card>
 
           <sl-card id="infoCard">
-            <h2>Technology Used</h2>
+            <h2>Maliek News</h2>
 
             <ul>
               <li>
@@ -142,7 +142,7 @@ export class AppHome extends LitElement {
           <sl-button href="${(import.meta as any).env.BASE_URL}about" variant="primary">Navigate to About</sl-button>
         </div>
 
-        <pwa-install>Install PWA Starter</pwa-install>
+        <pwa-install>Install Starter</pwa-install>
       </main>
     `;
   }

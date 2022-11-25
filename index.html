@@ -7,128 +7,192 @@
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6607653375286321" crossorigin="anonymous"></script> 
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-
     <script>
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
-        // Define a fixed-size ad slot.
-        // [START fixed_size_ad]
-        googletag
-          .defineSlot('/6355419/Travel/Europe/France/Paris',
-                      [300, 250], 'fixed-size-ad')
+        // Use defineOutOfPageSlot instead of defineSlot when working with
+        // out-of-page ads.
+        googletag.defineOutOfPageSlot('/6355419/Travel', 'out-of-page-ad')
+          .setTargeting('test', 'outofpage')
           .addService(googletag.pubads());
-        // [END fixed_size_ad]
+        googletag.pubads().enableSingleRequest();
+        googletag.enableServices();
+      });
+    </script>
+     <script>
+      window.googletag = window.googletag || {cmd: []};
 
-        // Define a multi-size ad slot.
-        // [START multi_size_ad]
+      var requestedTimestamp = {};
+
+      googletag.cmd.push(function() {
+        // Define ad slots.
         googletag
-          .defineSlot('/6355419/Travel/Europe',
-                      [[300, 250], [728, 90], [750, 200]], 'multi-size-ad')
+          .defineSlot('/6355419/Travel/Europe', [728, 90], 'ad-slot-1')
           .addService(googletag.pubads());
-        // [END multi_size_ad]
-
-        // Define a fluid ad slot.
-        // [START fluid_ad]
         googletag
-          .defineSlot('/6355419/Travel', ['fluid'], 'native-ad')
+          .defineSlot('/6355419/Travel/Europe', [750, 200], 'ad-slot-2')
           .addService(googletag.pubads());
-        // [END fluid_ad]
 
-        // Define a responsive ad slot.
-        // [START responsive_ad]
-        var responsiveAdSlot =
-            googletag.defineSlot('/6355419/Travel/Europe',
-                                 [[300, 250], [728, 90], [750, 200]], 'responsive-ad')
-                     .addService(googletag.pubads());
+        // This listener will be called when an impression is considered viewable.
+        googletag.pubads().addEventListener('impressionViewable', function(event) {
+          var slotId = event.slot.getSlotElementId();
+          printEventMessage('Impression has become viewable.', slotId);
+        });
 
-        var mapping =
-            googletag.sizeMapping()
-                     .addSize([1024, 768], [[750, 200], [728, 90]])
-                     .addSize([640, 480], [300, 250])
-                     .addSize([0, 0], [])
-                     .build();
+        // This listener will be called when a slots creative iframe load event fires.
+        googletag.pubads().addEventListener('slotOnload', function(event) {
+          var slotId = event.slot.getSlotElementId();
+          printEventMessage('Creative iframe load event has fired.', slotId);
+        });
 
-        responsiveAdSlot.defineSizeMapping(mapping);
-        // [END responsive_ad]
+        // This listener will be called when a slot has finished rendering.
+        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+          var slotId = event.slot.getSlotElementId();
+
+          // Record details of the rendered ad.
+          var details = {
+            'Advertiser ID': event.advertiserId,
+            'Campaign ID': event.campaignId,
+            'Company IDs': event.companyIds,
+            'Creative ID': event.creativeId,
+            'Creative Template ID': event.creativeId,
+            'Is backfill?': event.isBackfill,
+            'Is empty?': event.isEmpty,
+            'Label IDs': event.labelIds,
+            'Line Item ID': event.lineItemId,
+            'Size': event.size.join('x'),
+            'Slot content changed?': event.slotContentChanged,
+            'Source Agnostic Creative ID': event.sourceAgnosticCreativeId,
+            'Source Agnostic Line Item ID': event.sourceAgnosticLineItemId,
+            'Yield Group IDs': event.yieldGroupIds
+          }
+
+          printEventMessage('Slot has finished rendering.', slotId, details);
+        });
+
+        // This listener will be called when the specified service actually
+        // sets an ad request for a slot. Each slot will fire this event, even
+        // though they may be batched together in a single request if single
+        // request architecture (SRA) is enabled.
+        googletag.pubads().addEventListener('slotRequested', function(event) {
+          var slotId = event.slot.getSlotElementId();
+          requestedTimestamp[slotId] = Date.now();
+          printEventMessage('Slot has been requested.', slotId);
+        });
+
+        // This listener will be called when an ad response has been received for
+        // a slot.
+        googletag.pubads().addEventListener('slotResponseReceived', function(event) {
+          var slotId = event.slot.getSlotElementId();
+          printEventMessage('Ad response has been received.', slotId);
+        });
+
+        // This listener will be called whenever the on-screen percentage of an ad slot's
+        // area changes.
+        googletag.pubads().addEventListener('slotVisibilityChanged', function(event) {
+          var slotId = event.slot.getSlotElementId();
+
+          // Record details of the event.
+          var details = {'Visible area': event.inViewPercentage + '%'};
+
+          printEventMessage('Visibility has changed.', slotId, details);
+        });
 
         // Enable SRA and services.
         googletag.pubads().enableSingleRequest();
         googletag.enableServices();
       });
+
+      function printEventMessage(eventMessage, slotId, details = {}) {
+        var row = document.getElementsByClassName('status-row')[0].cloneNode(true);
+
+        var cells = row.getElementsByClassName('status-cell');
+        cells[0].innerHTML = slotId;
+        cells[1].innerHTML = eventMessage;
+        for (var key in details) {
+          cells[1].innerHTML += '<br/>&ensp;&ensp;' + key + ': ' + details[key];
+        }
+        cells[2].innerHTML = (Date.now() - requestedTimestamp[slotId]) + 'ms';
+
+        document.getElementsByClassName('status-container')[0].appendChild(row);
+      }
     </script>
     <style>
-      .ad-container {
-        border: solid;
+      .status,
+      .status-row {
+        display: inline-table;
+        width: 750px;
+      }
+
+      .status-container {
+        height: 400px;
+        overflow: scroll;
         width: 100%;
       }
 
-      .ad-slot {
-        border-style: dashed;
-        display: inline-block;
+      .status-row:nth-child(even) {
+        background-color: lightsteelblue;
       }
 
-      .native-slot {
+      .status-cell {
+        float: left;
+        min-width: 15%
+      }
+
+      .event {
         width: 50%;
       }
     </style>
-
-  
 </head>
 
 <body>
-    <h1>Fixed size ad slot</h1>
-
-    <p>This ad slot will display an ad sized 300x250.</p>
-
-    <div class="ad-container">
-      <div id="fixed-size-ad" class="ad-slot"></div>
-    </div>
-
-    <h1>Multi-size ad slot</h1>
-
-    <p>This ad slot will display an ad with any of the following dimensions: 300x250, 728x90, 750x200.</p>
-
-    <div class="ad-container">
-      <div id="multi-size-ad" class="ad-slot"></div>
-    </div>
-
-    <h1>Fluid ad slot</h1>
-
-    <p>This ad slot will resize its height to fit the creative content being displayed. For this example, the slot is limited to 50% of the width of its parent container.</p>
+    <span>Advertisement</span>
+    <div id="ad-slot-1" style="width: 728px; height: 90px;"></div>
 
 
-    <div class="ad-container">
-      <div id="native-ad" class="ad-slot native-slot"></div>
-    </div>
-
-    <h1>Responsive ad slot</h1>
-
-    <p>This ad slot will display different sized ads depending on the size of the browser viewport at page load time:</p>
-    <ul>
-      <li>When viewport &gt;= 1024x768, ads sized 750x200 or 728x90 may be displayed.</li>
-      <li>When 1024x768 &gt; viewport &gt;= 640x480, ads sized 300x250 may be displayed.</li>
-      <li>When viewport &lt; 640x480, no ads may be displayed.</li>
-    </ul>
 
 
-    <div class="ad-container">
-      <div id="responsive-ad" class="ad-slot"></div>
-    </div>
+
+
+    <span>Advertisement</span>
+    <div id="ad-slot-2" style="width: 750px; height: 200px;"></div>
+
+
+
+
+    <div class="status">
+      <div class="status-row">
+        <div class="status-cell"><b>Slot</b></div>
+        <div class="status-cell event"><b>Event</b></div>
+        <div class="status-cell"><b>Time from ad request</b></div>
+      </div>
+
+      <div class="status-container"></div>
+     </div>
+
 
     <script>
         googletag.cmd.push(function() {
-          googletag.display('responsive-ad');
+          googletag.display('ad-slot-2');
         });
+        (adsbygoogle = window.adsbygoogle || []).push({}); 
    </script>
 
+   <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-6607653375286321" data-ad-slot="6558425132"></ins>
 
 
-<div class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-6607653375286321" data-ad-slot="6558425132"></div> 
-<script> 
 
-(adsbygoogle = window.adsbygoogle || []).push({}); 
 
-</script>
+    <div id="out-of-page-ad">
+      <script>
+        googletag.cmd.push(function() {
+          googletag.display('out-of-page-ad');
+        });
+      </script>
+    </div>
+
+ 
+
 
   
 

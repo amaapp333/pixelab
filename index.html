@@ -5,50 +5,123 @@
   <meta charset="utf-8" />
   <title>Maliek Native App</title>
 
-  <base href="/" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6607653375286321" crossorigin="anonymous"></script> 
 
-  <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
-  <meta name="viewport"
-    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <meta name="description" content="This is a Maliek Starter app" />
+      <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <script>
+      window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+        // Define a fixed-size ad slot.
+        // [START fixed_size_ad]
+        googletag
+          .defineSlot('/6355419/Travel/Europe/France/Paris',
+                      [300, 250], 'fixed-size-ad')
+          .addService(googletag.pubads());
+        // [END fixed_size_ad]
 
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3" />
+        // Define a multi-size ad slot.
+        // [START multi_size_ad]
+        googletag
+          .defineSlot('/6355419/Travel/Europe',
+                      [[300, 250], [728, 90], [750, 200]], 'multi-size-ad')
+          .addService(googletag.pubads());
+        // [END multi_size_ad]
 
-  <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="PWA Starter" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        // Define a fluid ad slot.
+        // [START fluid_ad]
+        googletag
+          .defineSlot('/6355419/Travel', ['fluid'], 'native-ad')
+          .addService(googletag.pubads());
+        // [END fluid_ad]
 
-  <!-- Imports an icon to represent the document. -->
-  <link rel="icon" href="/assets/icons/icon_24.png" type="image/x-icon" />
+        // Define a responsive ad slot.
+        // [START responsive_ad]
+        var responsiveAdSlot =
+            googletag.defineSlot('/6355419/Travel/Europe',
+                                 [[300, 250], [728, 90], [750, 200]], 'responsive-ad')
+                     .addService(googletag.pubads());
 
-  <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
-  <link rel="manifest" href="/manifest.json" />
+        var mapping =
+            googletag.sizeMapping()
+                     .addSize([1024, 768], [[750, 200], [728, 90]])
+                     .addSize([640, 480], [300, 250])
+                     .addSize([0, 0], [])
+                     .build();
 
-  <!-- light mode and dark mode CSS -->
-  <link rel="stylesheet" media="(prefers-color-scheme:light)"
-    href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.73/dist/themes/light.css">
-  <link rel="stylesheet" media="(prefers-color-scheme:dark)"
-    href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.73/dist/themes/dark.css"
-    onload="document.documentElement.classList.add('sl-theme-dark');">
+        responsiveAdSlot.defineSizeMapping(mapping);
+        // [END responsive_ad]
 
-  <script type="module" src="/src/app-index.ts"></script>
+        // Enable SRA and services.
+        googletag.pubads().enableSingleRequest();
+        googletag.enableServices();
+      });
+    </script>
+    <style>
+      .ad-container {
+        border: solid;
+        width: 100%;
+      }
 
+      .ad-slot {
+        border-style: dashed;
+        display: inline-block;
+      }
+
+      .native-slot {
+        width: 50%;
+      }
+    </style>
+
+  
 </head>
 
 <body>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6607653375286321" crossorigin="anonymous"></script> 
-<ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-6607653375286321" data-ad-slot="6558425132"></ins> 
-<script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
+<h1>Fixed size ad slot</h1>
+    <p>This ad slot will display an ad sized 300x250.</p>
+    <div class="ad-container">
+      <div id="fixed-size-ad" class="ad-slot"></div>
+    </div>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register(
-        '/sw.js'
-      );
-    }
-  </script>
+    <h1>Multi-size ad slot</h1>
+    <p>This ad slot will display an ad with any of the following dimensions: 300x250, 728x90, 750x200.</p>
+    <div class="ad-container">
+      <div id="multi-size-ad" class="ad-slot"></div>
+    </div>
+
+    <h1>Fluid ad slot</h1>
+    <p>This ad slot will resize its height to fit the creative content being displayed. For this example, the slot is limited to 50% of the width of its parent container.</p>
+    <div class="ad-container">
+      <div id="native-ad" class="ad-slot native-slot"></div>
+    </div>
+
+    <h1>Responsive ad slot</h1>
+    <p>This ad slot will display different sized ads depending on the size of the browser viewport at page load time:</p>
+    <ul>
+      <li>When viewport &gt;= 1024x768, ads sized 750x200 or 728x90 may be displayed.</li>
+      <li>When 1024x768 &gt; viewport &gt;= 640x480, ads sized 300x250 may be displayed.</li>
+      <li>When viewport &lt; 640x480, no ads may be displayed.</li>
+    </ul>
+    <div class="ad-container">
+      <div id="responsive-ad" class="ad-slot"></div>
+    </div>
+
+    <script>
+        googletag.cmd.push(function() {
+          googletag.display('responsive-ad');
+        });
+   </script>
+
+
+
+<ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-6607653375286321" data-ad-slot="6558425132"></ins> 
+<script> 
+
+(adsbygoogle = window.adsbygoogle || []).push({}); 
+
+</script>
+
+  
+
 </body>
 
 </html>
